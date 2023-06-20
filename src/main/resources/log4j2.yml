@@ -1,0 +1,21 @@
+Configuration:
+  Appenders:
+    Console:
+      name: Console
+      target: SYSTEM_OUT
+      PatternLayout:
+        disableAnsi: false
+        pattern: "%d{${LOG_DATEFORMAT_PATTERN:-yyyy-MM-dd HH:mm:ss.SSS}} %highlight{${LOG_LEVEL_PATTERN:-%5p}}{FATAL=red blink, ERROR=red, WARN=yellow bold, INFO=green, DEBUG=green bold, TRACE=blue} %style{${sys:PID}}{magenta} %style{%-60.60C{6.}}{cyan} : %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}"
+
+  Loggers:
+    Root:
+      level: ERROR
+      AppenderRef:
+        - ref: Console
+
+    logger:
+      - name: com.lel
+        level: DEBUG
+
+      - name: org.springframework
+        level: INFO
