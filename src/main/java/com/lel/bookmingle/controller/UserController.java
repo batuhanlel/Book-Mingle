@@ -24,16 +24,6 @@ public class UserController {
     private UserService userService;
     private BookService bookService;
 
-    @GetMapping("/all")
-    public ResponseEntity<List<UserResponse>> getUsers() {
-        return ResponseEntity.ok(userService.getAllUsers());
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<UserResponse> getUserById(@PathVariable Integer id) {
-        return ResponseEntity.ok(userService.getUserById(id));
-    }
-
     @GetMapping("/profile")
     public ResponseEntity<UserProfileResponse> getMe() {
         Integer id = ContextManager.get().getUser().getId();

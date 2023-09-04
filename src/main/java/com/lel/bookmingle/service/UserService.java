@@ -28,13 +28,6 @@ public class UserService {
     private UserDTOMapper userDTOMapper;
     private BookDTOMapper bookDTOMapper;
 
-    public List<UserResponse> getAllUsers() {
-        return userRepository.findAll()
-                .stream()
-                .map(userDTOMapper)
-                .toList();
-    }
-
     public UserProfileResponse getUserProfile(int id) {
         User user = findUserById(id);
         List<BookResponse> bookList = user.getBooks().stream().map(bookDTOMapper).toList();
