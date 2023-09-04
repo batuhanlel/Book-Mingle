@@ -15,7 +15,7 @@ import java.util.List;
 @Repository
 public interface IBookRequestRepository extends JpaRepository<BookExchange, Integer> {
 
-    @Query("SELECT COUNT(be) FROM BookExchange be WHERE be.requesterUser.id = :requesterId AND be.requestStatus = 'accepted'")
+    @Query("SELECT COUNT(be) FROM BookExchange be WHERE be.requesterUser.id = :requesterId AND be.requestStatus = 'ACCEPTED'")
     int countAcceptedRequestsByRequesterId(@Param("requesterId") int requesterId);
 
     @EntityGraph(attributePaths = {"requesterUser", "requestedBook", "requestedUser", "proposedBook"})
