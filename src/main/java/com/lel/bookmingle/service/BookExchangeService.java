@@ -7,7 +7,7 @@ import com.lel.bookmingle.exception.ModelNotFoundException;
 import com.lel.bookmingle.model.BookExchange;
 import com.lel.bookmingle.model.User;
 import com.lel.bookmingle.repository.IBookRequestRepository;
-import com.lel.bookmingle.utility.context.ContextManager;
+import com.lel.bookmingle.utility.context.ContextProvider;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -23,9 +23,10 @@ import static com.lel.bookmingle.utility.Constants.ExceptionMessages.NO_SUCH_DEM
 @AllArgsConstructor
 public class BookExchangeService {
 
-    private IBookRequestRepository bookRequestRepository;
     private BookService bookService;
     private ChatService chatService;
+    private ContextProvider contextProvider;
+    private IBookRequestRepository bookRequestRepository;
 
     public List<BookExchangeResponse> getBookExchangeList(BookSearchRequest request) {
         return bookService.getBookExchangeList(request);
@@ -51,7 +52,7 @@ public class BookExchangeService {
     }
 
     protected List<BookExchange> getExchangeDemandListByUser(Integer page) {
-        User user = ContextManager.get().getUser();
+        User user = contextProvider.get().getUser();
         Sort sort = Sort.by("requestId");
         Pageable pageable = PageRequest.of(page, 10, sort);
         return bookRequestRepository.findByRequestedUserAndRequestStatus(user, RequestStatus.PENDING, pageable);

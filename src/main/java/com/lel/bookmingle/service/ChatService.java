@@ -6,7 +6,7 @@ import com.lel.bookmingle.dto.response.ChatResponse;
 import com.lel.bookmingle.model.Chat;
 import com.lel.bookmingle.model.User;
 import com.lel.bookmingle.repository.IChatRepository;
-import com.lel.bookmingle.utility.context.ContextManager;
+import com.lel.bookmingle.utility.context.ContextProvider;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -20,9 +20,10 @@ public class ChatService {
 
     private IChatRepository chatRepository;
     private ChatDTOMapper chatDTOMapper;
+    private ContextProvider contextProvider;
 
     public List<ChatResponse> getChatList() {
-        User user = ContextManager.get().getUser();
+        User user = contextProvider.get().getUser();
         List<Chat> chats =  chatRepository.findByUser1OrUser2(user, user);
         return chats.stream().map(chatDTOMapper).toList();
     }

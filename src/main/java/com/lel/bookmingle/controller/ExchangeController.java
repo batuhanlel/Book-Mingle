@@ -4,9 +4,12 @@ import com.lel.bookmingle.dto.request.ExchangeRequest;
 import com.lel.bookmingle.dto.request.book.BookSearchRequest;
 import com.lel.bookmingle.dto.response.BookExchangeResponse;
 import com.lel.bookmingle.dto.response.ExchangeDemandResponse;
+import com.lel.bookmingle.enums.RequestStatus;
+import com.lel.bookmingle.enums.RequestType;
 import com.lel.bookmingle.exception.ErrorResponse;
 import com.lel.bookmingle.service.BookExchangeService;
 import com.lel.bookmingle.service.UserBookExchangeService;
+import com.lel.bookmingle.utility.context.ContextProvider;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -28,6 +31,7 @@ import java.util.List;
 @AllArgsConstructor
 public class ExchangeController {
 
+    private ContextProvider contextProvider;
     private BookExchangeService bookExchangeService;
     private UserBookExchangeService userBookExchangeService;
 
@@ -38,6 +42,9 @@ public class ExchangeController {
 
     @PostMapping("/request")
     public ResponseEntity<?> create(@RequestBody ExchangeRequest request) {
+        request.setRequesterUserId(contextProvider.get().getUser().getId());
+        request.setRequestType(RequestType.EXCHANGE);
+        request.setRequestStatus(RequestStatus.PENDING);
         return ResponseEntity.ok(userBookExchangeService.createExchangeRequest(request));
     }
 

@@ -4,7 +4,7 @@ import com.lel.bookmingle.model.User;
 import com.lel.bookmingle.service.JwtService;
 import com.lel.bookmingle.service.UserService;
 import com.lel.bookmingle.utility.context.Context;
-import com.lel.bookmingle.utility.context.ContextManager;
+import com.lel.bookmingle.utility.context.ContextProvider;
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -29,6 +29,7 @@ public class ContextManagerFilter implements Filter {
 
     private final UserService userService;
     private final JwtService jwtService;
+    private final ContextProvider contextProvider;
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
@@ -65,10 +66,10 @@ public class ContextManagerFilter implements Filter {
         logger.info(requestInfo.toString());
 
         try {
-            ContextManager.set(context);
+            contextProvider.setContext(context);
             filterChain.doFilter(request, response);
         } finally {
-            ContextManager.clear();
+            contextProvider.clearContext();
         }
     }
 }

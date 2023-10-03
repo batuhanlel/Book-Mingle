@@ -9,7 +9,7 @@ import com.lel.bookmingle.exception.ModelNotFoundException;
 import com.lel.bookmingle.model.Book;
 import com.lel.bookmingle.model.User;
 import com.lel.bookmingle.repository.IUserRepository;
-import com.lel.bookmingle.utility.context.ContextManager;
+import com.lel.bookmingle.utility.context.ContextProvider;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,6 +22,7 @@ import static com.lel.bookmingle.utility.Constants.ExceptionMessages.NO_SUCH_USE
 @AllArgsConstructor
 public class UserService {
 
+    private ContextProvider contextProvider;
     private BookExchangeService bookExchangeService;
     private BookService bookService;
     private IUserRepository userRepository;
@@ -45,7 +46,7 @@ public class UserService {
 
     @Transactional
     public void addBookToUserLibrary(Integer bookId) {
-        User user = findUserById(ContextManager.get().getUser().getId());
+        User user = findUserById(contextProvider.get().getUser().getId());
         Book book = bookService.findBookById(bookId);
         user.getBooks().add(book);
         userRepository.save(user);

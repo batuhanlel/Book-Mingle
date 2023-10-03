@@ -5,7 +5,7 @@ import com.lel.bookmingle.dto.response.UserProfileResponse;
 import com.lel.bookmingle.dto.response.UserResponse;
 import com.lel.bookmingle.service.BookService;
 import com.lel.bookmingle.service.UserService;
-import com.lel.bookmingle.utility.context.ContextManager;
+import com.lel.bookmingle.utility.context.ContextProvider;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,16 +23,17 @@ public class UserController {
 
     private UserService userService;
     private BookService bookService;
+    private ContextProvider contextProvider;
 
     @GetMapping("/profile")
     public ResponseEntity<UserProfileResponse> getMe() {
-        Integer id = ContextManager.get().getUser().getId();
+        Integer id = contextProvider.get().getUser().getId();
         return ResponseEntity.ok(userService.getUserProfile(id));
     }
 
     @GetMapping("/about")
     public ResponseEntity<UserResponse> getAbout() {
-        Integer id = ContextManager.get().getUser().getId();
+        Integer id = contextProvider.get().getUser().getId();
         return ResponseEntity.ok(userService.getUserById(id));
     }
 

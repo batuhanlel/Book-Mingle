@@ -8,7 +8,7 @@ import com.lel.bookmingle.dto.response.RecommendationApiResponse;
 import com.lel.bookmingle.model.Book;
 import com.lel.bookmingle.model.BookExchange;
 import com.lel.bookmingle.model.User;
-import com.lel.bookmingle.utility.context.ContextManager;
+import com.lel.bookmingle.utility.context.ContextProvider;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,21 +23,22 @@ public class UserBookExchangeService {
 
     private UserService userService;
     private BookService bookService;
+    private ContextProvider contextProvider;
     private BookExchangeService bookExchangeService;
     private RecommendationService recommendationService;
     private ExchangeDemandDTOMapper exchangeDemandDTOMapper;
 
     public boolean createExchangeRequest(ExchangeRequest request) {
         BookExchange createdRequest = bookExchangeService.createExchangeRequest(BookExchange.builder()
-                .requesterUser(userService.findUserById(request.requesterUserId()))
-                .proposedBook(bookService.findBookById(request.proposedBookId()))
+                .requesterUser(userService.findUserById(request.getRequesterUserId()))
+                .proposedBook(bookService.findBookById(request.getProposedBookId()))
 
-                .requestedUser(userService.findUserById(request.requestedUserId()))
-                .requestedBook(bookService.findBookById(request.requestedBookId()))
+                .requestedUser(userService.findUserById(request.getRequestedUserId()))
+                .requestedBook(bookService.findBookById(request.getRequestedBookId()))
 
                 .requestedDate(LocalDate.now())
-                .requestType(request.requestType())
-                .requestStatus(request.requestStatus())
+                .requestType(request.getRequestType())
+                .requestStatus(request.getRequestStatus())
                 .build());
         return Objects.nonNull(createdRequest.getRequestId());
     }
@@ -51,13 +52,14 @@ public class UserBookExchangeService {
         List<String> userBooks = getUserBooks(latitude, longitude);
 
         RecommendationApiResponse recommendationApiResponse = recommendationService.getRecommendationList(userBooks);
-        User user = userService.findUserById(ContextManager.get().getUser().getId());
+        User user = userService.findUserById(contextProvider.get().getUser().getId());
         return bookService.getBookExchangeListForRecommendations(user, recommendationApiResponse.recommendations());
     }
 
+    // TODO is this annotation necessary? Test it. Transactional annotation have no effect on private methods
     @Transactional
     private List<String> getUserBooks(double latitude, double longitude) {
-        Integer userId = ContextManager.get().getUser().getId();
+        Integer userId = contextProvider.get().getUser().getId();
         User user = userService.findUserById(userId);
 
 

@@ -2,20 +2,25 @@ package com.lel.bookmingle.dto.request;
 
 import com.lel.bookmingle.enums.RequestStatus;
 import com.lel.bookmingle.enums.RequestType;
-import com.lel.bookmingle.utility.context.ContextManager;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-public record ExchangeRequest(
-        Integer requesterUserId,
-        Integer proposedBookId,
-        Integer requestedUserId,
-        Integer requestedBookId,
-        RequestType requestType,
-        RequestStatus requestStatus
+import java.io.Serializable;
 
-        ) {
-    public ExchangeRequest {
-        requesterUserId = ContextManager.get().getUser().getId();
-        requestType = RequestType.EXCHANGE;
-        requestStatus = RequestStatus.PENDING;
-    }
+@Getter
+@Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+public class ExchangeRequest implements Serializable {
+
+    private Integer requesterUserId;
+    private Integer proposedBookId;
+    private Integer requestedUserId;
+    private Integer requestedBookId;
+    private RequestType requestType;
+    private RequestStatus requestStatus;
 }

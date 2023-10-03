@@ -8,7 +8,7 @@ import com.lel.bookmingle.exception.ModelNotFoundException;
 import com.lel.bookmingle.model.Book;
 import com.lel.bookmingle.model.User;
 import com.lel.bookmingle.repository.IBookRepository;
-import com.lel.bookmingle.utility.context.ContextManager;
+import com.lel.bookmingle.utility.context.ContextProvider;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -25,6 +25,7 @@ public class BookService {
 
     private IBookRepository bookRepository;
     private BookDTOMapper bookDTOMapper;
+    private ContextProvider contextProvider;
 
     public List<BookExchangeResponse> getBookExchangeList(BookSearchRequest request) {
         Sort sort = getSort(request.sort());
@@ -42,7 +43,7 @@ public class BookService {
     }
 
     public List<BookResponse> getUserBookList() {
-        Integer userId = ContextManager.get().getUser().getId();
+        Integer userId = contextProvider.get().getUser().getId();
         return bookRepository.findBooksByUser(userId);
     }
 
